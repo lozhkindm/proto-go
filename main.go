@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/lozhkindm/proto-go/src/simplepb"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"io/ioutil"
 	"log"
@@ -12,6 +13,39 @@ func main() {
 	sm := doSimple()
 
 	readAndWrite(sm)
+	toAndFromJSON(sm)
+}
+
+func toAndFromJSON(sm proto.Message) {
+	sm2 := &simplepb.SimpleMessage{}
+
+	json := toJSON(sm)
+
+	if err := fromJSON(json, sm2); err != nil {
+		panic(err)
+	}
+}
+
+func toJSON(pb proto.Message) string {
+	json, err := protojson.Marshal(pb)
+
+	if err != nil {
+		log.Fatalln("Can't marshal to json", err)
+		return ""
+	}
+
+	return string(json)
+}
+
+func fromJSON(json string, pb proto.Message) error {
+	err := protojson.Unmarshal([]byte(json), pb)
+
+	if err != nil {
+		log.Fatalln("Can't unmarshal from json", err)
+		return err
+	}
+
+	return nil
 }
 
 func readAndWrite(sm proto.Message) {
@@ -20,7 +54,6 @@ func readAndWrite(sm proto.Message) {
 	if err := writeToFile("simple.bin", sm); err != nil {
 		panic(err)
 	}
-
 	if err := readFromFile("simple.bin", sm2); err != nil {
 		panic(err)
 	}
