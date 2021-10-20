@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/lozhkindm/proto-go/src/complexpb"
+	"github.com/lozhkindm/proto-go/src/enumpb"
 	"github.com/lozhkindm/proto-go/src/simplepb"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -14,6 +16,41 @@ func main() {
 
 	readAndWrite(sm)
 	toAndFromJSON(sm)
+
+	enum()
+	complx()
+}
+
+func complx() {
+	cm := complexpb.ComplexMessage{
+		OneDummy: &complexpb.DummyMessage{
+			Id:   32,
+			Name: "inner dummy",
+		},
+		MultipleDummy: []*complexpb.DummyMessage{
+			{
+				Id:   66,
+				Name: "slice dummy",
+			},
+			{
+				Id:   70,
+				Name: "slice dummy 2",
+			},
+		},
+	}
+
+	fmt.Println(cm)
+}
+
+func enum() {
+	em := enumpb.EnumMessage{
+		Id:           18,
+		DayOfTheWeek: enumpb.DayOfTheWeek_FRIDAY,
+	}
+
+	em.DayOfTheWeek = enumpb.DayOfTheWeek_MONDAY
+
+	fmt.Println(em)
 }
 
 func toAndFromJSON(sm proto.Message) {
