@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/lozhkindm/proto-go/src/addresspb"
 	"github.com/lozhkindm/proto-go/src/complexpb"
 	"github.com/lozhkindm/proto-go/src/enumpb"
 	"github.com/lozhkindm/proto-go/src/simplepb"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"io/ioutil"
 	"log"
 )
@@ -19,6 +21,46 @@ func main() {
 
 	enum()
 	complx()
+	address()
+}
+
+func address() {
+	ab := addresspb.AddressBook{
+		People: []*addresspb.Person{
+			{
+				Name:  "P1",
+				Id:    1,
+				Email: "p1@fia.com",
+				Phones: []*addresspb.Person_PhoneNumber{
+					{
+						Number: "P1",
+						Type:   addresspb.Person_MOBILE,
+					},
+				},
+				LastUpdated: &timestamppb.Timestamp{
+					Seconds: 100,
+					Nanos:   323,
+				},
+			},
+			{
+				Name:  "P2",
+				Id:    2,
+				Email: "p2@fia.com",
+				Phones: []*addresspb.Person_PhoneNumber{
+					{
+						Number: "P2",
+						Type:   addresspb.Person_HOME,
+					},
+				},
+				LastUpdated: &timestamppb.Timestamp{
+					Seconds: 155,
+					Nanos:   877,
+				},
+			},
+		},
+	}
+
+	fmt.Println(ab)
 }
 
 func complx() {
